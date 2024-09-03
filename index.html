@@ -90,30 +90,30 @@
     <div class="language-selector">
         <label for="language">Choose Language:</label>
         <select id="language" onchange="changeLanguage()">
-            <option value="en">English</option>
             <option value="fa">Persian</option>
+            <option value="en">English</option>
         </select>
     </div>
     <div class="difficulty-selector">
-        <label for="difficulty" id="difficultyLabel">Choose Difficulty:</label>
+        <label for="difficulty" id="difficultyLabel">انتخاب سطح دشواری:</label>
         <select id="difficulty" onchange="resetGame()">
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-            <option value="4">Level 4</option>
-            <option value="5">Level 5</option>
+            <option value="1">سطح ۱</option>
+            <option value="2">سطح ۲</option>
+            <option value="3">سطح ۳</option>
+            <option value="4">سطح ۴</option>
+            <option value="5">سطح ۵</option>
         </select>
     </div>
     <div class="container">
-        <div class="header" id="originalColorsHeader">Look at these colors</div>
+        <div class="header" id="originalColorsHeader">به این رنگ‌ها نگاه کنید</div>
         <div id="colorPanel" class="color-panel"></div>
     </div>
     <div class="container">
-        <div class="header" id="testColorsHeader">Choose 2 of these colors that are not in the above colors</div>
+        <div class="header" id="testColorsHeader">دو تا از این رنگ‌ها، در رنگ‌های بالا نیستند. آنها را انتخاب کنید</div>
         <div id="testPanel" class="color-panel"></div>
     </div>
-    <button id="calculateScoreButton">Calculate Score</button>
-    <button id="resetButton">Reset</button>
+    <button id="calculateScoreButton">محاسبه امتیاز</button>
+    <button id="resetButton">بازی مجدد</button>
     <div id="score"></div>
 
     <script src="script.js"></script>

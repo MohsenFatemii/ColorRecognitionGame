@@ -21,9 +21,9 @@ const translations = {
         calculateScoreButton: "محاسبه امتیاز",
         resetButton: "بازی مجدد",
         scoreText: "امتیاز شما:",
-        selectColorsAlert: "لطفاً دقیقاً 2 رنگ انتخاب کنید.",
+        selectColorsAlert: "لطفاً دقیقاً ۲ رنگ انتخاب کنید.",
         difficultyLabel: "انتخاب سطح دشواری:",
-        difficultyLevels: ["سطح 1", "سطح 2", "سطح 3", "سطح 4", "سطح 5"]
+        difficultyLevels: ["سطح ۱", "سطح ۲", "سطح ۳", "سطح ۴", "سطح ۵"]
     }
 };
 
