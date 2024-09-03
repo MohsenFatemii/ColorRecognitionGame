@@ -17,7 +17,7 @@ const translations = {
     },
     fa: {
         originalColorsHeader: "به این رنگ‌ها نگاه کنید",
-        testColorsHeader: "دو تا از این رنگ‌ها که در رنگ‌های بالا نیستند را انتخاب کنید",
+        testColorsHeader: "دو تا از این رنگ‌ها، در رنگ‌های بالا نیستند. آنها را انتخاب کنید",
         calculateScoreButton: "محاسبه امتیاز",
         resetButton: "بازی مجدد",
         scoreText: "امتیاز شما:",
