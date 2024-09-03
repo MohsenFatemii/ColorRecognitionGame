@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Recognition Game</title>
+    <style>
+        @font-face {
+          font-family: 'Vazir';
+          src: url('Fonts/Vazir.woff2') format('woff2'),
+               url('Fonts/Vazir.woff') format('woff');
+        }
+        body {
+            font-family: Vazir;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .color-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .color-box {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, border 0.2s;
+        }
+        .color-box:hover {
+            transform: scale(1.1);
+        }
+        .selected {
+            border: 3px solid black;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        #score {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .language-selector, .difficulty-selector {
+            margin: 20px;
+        }
+    </style>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G5LBHNW6NB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-G5LBHNW6NB');
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KZHGBDTR');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZHGBDTR"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="language-selector">
+        <label for="language">Choose Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="fa">Persian</option>
+        </select>
+    </div>
+    <div class="difficulty-selector">
+        <label for="difficulty" id="difficultyLabel">Choose Difficulty:</label>
+        <select id="difficulty" onchange="resetGame()">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+            <option value="5">Level 5</option>
+        </select>
+    </div>
+    <div class="container">
+        <div class="header" id="originalColorsHeader">Look at these colors</div>
+        <div id="colorPanel" class="color-panel"></div>
+    </div>
+    <div class="container">
+        <div class="header" id="testColorsHeader">Choose 2 of these colors that are not in the above colors</div>
+        <div id="testPanel" class="color-panel"></div>
+    </div>
+    <button id="calculateScoreButton">Calculate Score</button>
+    <button id="resetButton">Reset</button>
+    <div id="score"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
