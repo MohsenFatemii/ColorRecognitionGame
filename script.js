@@ -119,15 +119,15 @@ function calculateScore() {
 
     const difficulty = document.getElementById('difficulty').value;
 
-    // dataLayer.push({
-    //     'event': 'score_calculated',
-    //     'score': score,
-    //     'difficulty': difficulty
-    // });
-    gtag('event', 'score_calculated', {
-       'score': score,
-       'difficulty': difficulty
-     });
+    dataLayer.push({
+        'event': 'score_calculated',
+        'score': score,
+        'difficulty': difficulty
+    });
+    // gtag('event', 'score_calculated', {
+    //    'score': score,
+    //    'difficulty': difficulty
+    //  });
 }
 
 
