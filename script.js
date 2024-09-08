@@ -124,10 +124,10 @@ function calculateScore() {
         'score': score,
         'difficulty': difficulty
     });
-    // gtag('event', 'score_calculated', {
-    //    'score': score,
-    //    'difficulty': difficulty
-    //  });
+    gtag('event', 'score_calculated', {
+       'score': score,
+       'difficulty': difficulty
+     });
 }
 
 
