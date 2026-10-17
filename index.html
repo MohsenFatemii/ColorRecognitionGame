@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,7 +172,7 @@
             padding: 16px 24px;
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
             border-radius: var(--border-radius);
-            border-left: 4px solid #667eea;
+            border-inline-start: 4px solid #667eea;
         }
         
         .color-panel {
@@ -188,44 +188,156 @@
             width: 80px;
             height: 80px;
             border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #808080;
             box-shadow: var(--shadow-soft);
             position: relative;
             overflow: hidden;
+            outline: 3px solid transparent;
+            outline-offset: 3px;
+            transition: transform 0.2s ease, outline-color 0.2s ease;
+            animation: tileIn 0.4s ease backwards;
         }
-        
-        .color-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+
+        .color-box canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
-        
-        .color-box:hover {
-            transform: translateY(-8px) scale(1.05);
-            box-shadow: var(--shadow-medium);
+
+        @keyframes tileIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
         }
-        
-        .color-box:hover::before {
-            opacity: 1;
+
+        button.color-box {
+            cursor: pointer;
         }
-        
+
+        button.color-box:disabled {
+            cursor: default;
+        }
+
+        @media (hover: hover) {
+            button.color-box:not(:disabled):hover {
+                transform: translateY(-4px);
+            }
+        }
+
+        button.color-box:focus-visible {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--text-primary);
+        }
+
+        /* Markers are outlines outside the tile, so they never tint the color being judged */
         .color-box.selected {
-            transform: translateY(-8px) scale(1.1);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
-            border: 3px solid #667eea;
-            animation: pulse 1.5s infinite;
+            outline-color: #667eea;
+            transform: translateY(-6px);
         }
-        
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4); }
-            50% { box-shadow: 0 25px 50px rgba(102, 126, 234, 0.6); }
+
+        .color-box.correct {
+            outline-color: var(--success-color);
+        }
+
+        .color-box.wrong {
+            outline-color: var(--error-color);
+        }
+
+        .color-box.missed,
+        .color-box.twin {
+            outline: 3px dashed var(--warning-color);
+        }
+
+        .color-box[data-badge]::after {
+            content: attr(data-badge);
+            position: absolute;
+            top: 6px;
+            inset-inline-end: 6px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            color: var(--text-primary);
+            font: 700 13px/22px system-ui, sans-serif;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .round-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .streak-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .streak-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            transition: background 0.3s ease;
+        }
+
+        .streak-dot.filled {
+            background: var(--primary-gradient);
+        }
+
+        .missed-pair {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .missed-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .pair-swatch {
+            width: min(320px, 100%);
+            height: 120px;
+            margin: 16px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .pair-labels {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .pair-labels code {
+            display: block;
+            margin-top: 4px;
+            direction: ltr;
+            font-family: ui-monospace, Consolas, monospace;
+            color: var(--text-secondary);
+        }
+
+        .pair-note {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
         }
         
         .action-buttons {
@@ -293,6 +405,17 @@
         
         .btn:active {
             transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn:disabled::before {
+            display: none;
         }
         
         .score-display {
@@ -382,6 +505,14 @@
         .score-content {
             position: relative;
             z-index: 2;
+        }
+
+        /* White on gold is unreadable */
+        .score-perfect .score-text,
+        .score-perfect .score-value,
+        .score-perfect .score-message {
+            color: #3d2f00;
+            text-shadow: none;
         }
         
         .score-emoji {
@@ -608,15 +739,15 @@
 
         <div class="controls-section">
             <div class="control-group">
-                <label for="language" class="control-label">زبان</label>
-                <select id="language" onchange="changeLanguage()">
+                <label for="language" class="control-label" id="languageLabel">زبان</label>
+                <select id="language">
                     <option value="fa">فارسی</option>
                     <option value="en">English</option>
                 </select>
             </div>
             <div class="control-group">
                 <label for="difficulty" class="control-label" id="difficultyLabel">انتخاب سطح دشواری</label>
-                <select id="difficulty" onchange="resetGame()">
+                <select id="difficulty">
                     <option value="1">سطح ۱</option>
                     <option value="2">سطح ۲</option>
                     <option value="3">سطح ۳</option>
@@ -634,22 +765,152 @@
         <div class="game-section">
             <div class="section-header" id="testColorsHeader">دو تا از این رنگ‌ها، در رنگ‌های بالا نیستند. آنها را انتخاب کنید</div>
             <div id="testPanel" class="color-panel"></div>
+            <div class="round-status">
+                <div id="selectionCount" aria-live="polite"></div>
+                <div id="streakDots" class="streak-dots" aria-hidden="true"></div>
+                <div id="streakText"></div>
+            </div>
         </div>
 
         <div class="action-buttons">
-            <button id="calculateScoreButton" class="btn btn-primary">محاسبه امتیاز</button>
-            <button id="resetButton" class="btn btn-secondary">بازی مجدد</button>
+            <button id="calculateScoreButton" class="btn btn-primary" disabled>بررسی پاسخ</button>
+            <button id="resetButton" class="btn btn-secondary">رد کردن این دور</button>
         </div>
 
-        <div id="score" class="score-display"></div>
+        <div id="score" class="score-display" aria-live="polite"></div>
+
+        <div id="missedPair" class="missed-pair" hidden>
+            <div id="missedTitle" class="missed-title"></div>
+            <div id="missedSwatch" class="pair-swatch"></div>
+            <div class="pair-labels">
+                <div><span id="missedNewLabel"></span><code id="missedNewValue"></code></div>
+                <div><span id="missedNearestLabel"></span><code id="missedNearestValue"></code></div>
+            </div>
+            <div id="missedNote" class="pair-note"></div>
+        </div>
     </div>
 
     <script>
-        const colorPanel = document.getElementById('colorPanel');
-        const testPanel = document.getElementById('testPanel');
-        const calculateScoreButton = document.getElementById('calculateScoreButton');
-        const resetButton = document.getElementById('resetButton');
-        const scoreDiv = document.getElementById('score');
+    // Everything lives inside this closure so the answer isn't reachable from the console.
+    (() => {
+        'use strict';
+
+        // --- color math: OKLab for generating colors, CIEDE2000 for measuring differences ---
+        const srgbToLinear = c => {
+            c /= 255;
+            return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+        };
+        const linearToSrgb = c => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055);
+
+        function oklabToRgb([L, a, b]) {
+            const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+            const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+            const s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3;
+            return [
+                4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+                -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+                -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+            ].map(v => v < 0 ? -1 : linearToSrgb(v));
+        }
+
+        function rgbToLab(rgb) {
+            const [r, g, b] = rgb.map(srgbToLinear);
+            const x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047;
+            const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883;
+            const f = v => v > 216 / 24389 ? Math.cbrt(v) : (24389 / 27 * v + 16) / 116;
+            const fx = f(x), fy = f(y), fz = f(z);
+            return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+        }
+
+        // CIEDE2000: about 1.0 is the smallest difference most people notice
+        function deltaE(rgb1, rgb2) {
+            const [L1, a1, b1] = rgbToLab(rgb1);
+            const [L2, a2, b2] = rgbToLab(rgb2);
+            const rad = Math.PI / 180;
+            const Cbar = (Math.hypot(a1, b1) + Math.hypot(a2, b2)) / 2;
+            const G = 0.5 * (1 - Math.sqrt(Cbar ** 7 / (Cbar ** 7 + 25 ** 7)));
+            const a1p = (1 + G) * a1, a2p = (1 + G) * a2;
+            const C1p = Math.hypot(a1p, b1), C2p = Math.hypot(a2p, b2);
+            const hue = (y, x) => (Math.atan2(y, x) / rad + 360) % 360;
+            const h1p = hue(b1, a1p), h2p = hue(b2, a2p);
+            let dhp = 0;
+            if (C1p * C2p !== 0) {
+                dhp = h2p - h1p;
+                if (dhp > 180) dhp -= 360;
+                else if (dhp < -180) dhp += 360;
+            }
+            const dLp = L2 - L1, dCp = C2p - C1p;
+            const dHp = 2 * Math.sqrt(C1p * C2p) * Math.sin(dhp * rad / 2);
+            const Lbp = (L1 + L2) / 2, Cbp = (C1p + C2p) / 2;
+            let hbp = h1p + h2p;
+            if (C1p * C2p !== 0) {
+                if (Math.abs(h1p - h2p) <= 180) hbp /= 2;
+                else hbp = hbp < 360 ? (hbp + 360) / 2 : (hbp - 360) / 2;
+            }
+            const T = 1 - 0.17 * Math.cos((hbp - 30) * rad) + 0.24 * Math.cos(2 * hbp * rad)
+                + 0.32 * Math.cos((3 * hbp + 6) * rad) - 0.20 * Math.cos((4 * hbp - 63) * rad);
+            const dTheta = 30 * Math.exp(-(((hbp - 275) / 25) ** 2));
+            const Rc = 2 * Math.sqrt(Cbp ** 7 / (Cbp ** 7 + 25 ** 7));
+            const Sl = 1 + 0.015 * (Lbp - 50) ** 2 / Math.sqrt(20 + (Lbp - 50) ** 2);
+            const Sc = 1 + 0.045 * Cbp;
+            const Sh = 1 + 0.015 * Cbp * T;
+            const Rt = -Math.sin(2 * dTheta * rad) * Rc;
+            return Math.sqrt((dLp / Sl) ** 2 + (dCp / Sc) ** 2 + (dHp / Sh) ** 2 + Rt * (dCp / Sc) * (dHp / Sh));
+        }
+
+        function randomUnitVector() {
+            const v = [0, 1, 2].map(() => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random()));
+            const length = Math.hypot(...v);
+            return length > 0 ? v.map(x => x / length) : [1, 0, 0];
+        }
+
+        const LINE_LENGTH = 12; // 10 originals + 2 new
+        const MARGIN = 8;       // keeps every channel in 8..247 so the tile noise never clips
+        const inRange = rgb => rgb.every(v => v >= MARGIN && v <= 255 - MARGIN);
+
+        // A line of 12 colors, each one step from the next. The base color and the direction
+        // are random in OKLab; the step is sized so every neighboring pair differs by
+        // `target` in CIEDE2000 (within 20%), which keeps a level equally hard every round.
+        function makeLine(target) {
+            for (let attempt = 0; ; attempt++) {
+                const tolerance = 0.2 + 0.1 * Math.floor(attempt / 5000);
+                const L = 0.45 + Math.random() * 0.4;
+                const C = 0.02 + Math.random() * 0.12;
+                const h = Math.random() * 2 * Math.PI;
+                const lab = [L, C * Math.cos(h), C * Math.sin(h)];
+                const base = oklabToRgb(lab);
+                if (!inRange(base)) continue;
+
+                const dir = randomUnitVector();
+                const probe = oklabToRgb(lab.map((v, k) => v + 0.01 * dir[k]));
+                const rate = deltaE(base, probe) / 0.01;
+                if (!(rate > 0)) continue;
+
+                const next = oklabToRgb(lab.map((v, k) => v + target / rate * dir[k]));
+                const start = base.map(Math.round);
+                const step = next.map((v, k) => Math.round(v - base[k]));
+                if (step.every(v => v === 0)) continue;
+
+                const line = Array.from({ length: LINE_LENGTH },
+                    (_, i) => start.map((v, k) => v + (i - LINE_LENGTH / 2) * step[k]));
+                if (!line.every(inRange)) continue;
+
+                let even = true;
+                for (let i = 0; even && i < LINE_LENGTH - 1; i++) {
+                    even = Math.abs(deltaE(line[i], line[i + 1]) / target - 1) <= tolerance;
+                }
+                if (even) return line;
+            }
+        }
+        // --- end color math ---
+
+        // CIEDE2000 step between neighboring colors on each level. Level 5 (0.3) is well
+        // below what people can see, so it is meant to be unwinnable.
+        const LEVEL_DELTA_E = [5.0, 3.5, 2.2, 1.2, 0.3];
+        const TEST_SIZE = 5;      // 3 originals + 2 new
+        const STREAK_TO_WIN = 5;  // guessing 5 perfect rounds in a row: 1 in 100,000
+        const NOISE = 6;          // ± per channel, per pixel; must stay <= MARGIN
 
         const translations = {
             en: {
@@ -657,148 +918,276 @@
                 gameTitle: "Color Vision",
                 gameSubtitle: "Test your color perception skills",
                 languageLabel: "Language",
-                originalColorsHeader: "Look at these colors",
-                testColorsHeader: "Choose 2 of these colors that are not in the above colors",
-                calculateScoreButton: "Calculate Score",
-                resetButton: "Reset Game",
-                scoreText: "Your Score",
-                selectColorsAlert: "Please select exactly 2 colors.",
                 difficultyLabel: "Difficulty",
                 difficultyLevels: ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"],
-                scoreMessages: {
-                    perfect: "Perfect! Amazing color vision!",
-                    good: "Great job! You have good color perception!",
-                    poor: "Keep practicing! Your color vision will improve!"
-                }
+                originalColorsHeader: "Look at these colors",
+                testColorsHeader: "Two of these colors are not in the set above. Pick them.",
+                tileLabel: "Color {n}",
+                checkButton: "Check answer",
+                skipButton: "Skip round",
+                skipResetsButton: "Skip (streak resets)",
+                nextButton: "Next round",
+                selectedCount: "Selected: {n} of 2",
+                streakText: "Perfect rounds in a row: {n} of {goal}",
+                scoreText: "Your score",
+                winTitle: "Challenge beaten",
+                messages: {
+                    perfect: "Perfect round. But guessing also gets 1 round in 10 perfect, so one round proves nothing. {left} more in a row to win.",
+                    win: "{goal} perfect rounds in a row. The chance of guessing that is 1 in {odds}. You really can see the difference.",
+                    nextLevel: "Now try level {n}.",
+                    one: "1 of 2. Random clicking scores this 6 times in 10.",
+                    zero: "0 of 2. Random clicking scores this 3 times in 10.",
+                    streakReset: "Your streak starts over."
+                },
+                missedTitle: "You couldn't tell these apart",
+                missedNew: "New color",
+                missedNearest: "Closest color above",
+                missedNote: "These are two different colors, side by side. Difference: ΔE {de} (about 1.0 is the smallest difference most people notice)."
             },
             fa: {
                 pageTitle: "بازی تشخیص رنگ",
                 gameTitle: "بینایی رنگ",
                 gameSubtitle: "مهارت تشخیص رنگ خود را آزمایش کنید",
                 languageLabel: "زبان",
-                originalColorsHeader: "به این رنگ‌ها نگاه کنید",
-                testColorsHeader: "دو تا از این رنگ‌ها، در رنگ‌های بالا نیستند. آنها را انتخاب کنید",
-                calculateScoreButton: "محاسبه امتیاز",
-                resetButton: "بازی مجدد",
-                scoreText: "امتیاز شما",
-                selectColorsAlert: "لطفاً دقیقاً ۲ رنگ انتخاب کنید.",
                 difficultyLabel: "سطح دشواری",
                 difficultyLevels: ["سطح ۱", "سطح ۲", "سطح ۳", "سطح ۴", "سطح ۵"],
-                scoreMessages: {
-                    perfect: "عالی! بینایی رنگ فوق‌العاده‌ای دارید!",
-                    good: "آفرین! تشخیص رنگ خوبی دارید!",
-                    poor: "ادامه بدهید! بینایی رنگ شما بهتر خواهد شد!"
-                }
+                originalColorsHeader: "به این رنگ‌ها نگاه کنید",
+                testColorsHeader: "دو تا از این رنگ‌ها، در رنگ‌های بالا نیستند. آنها را انتخاب کنید",
+                tileLabel: "رنگ {n}",
+                checkButton: "بررسی پاسخ",
+                skipButton: "رد کردن این دور",
+                skipResetsButton: "رد کردن (شمارش صفر می‌شود)",
+                nextButton: "دور بعد",
+                selectedCount: "انتخاب‌شده: {n} از ۲",
+                streakText: "دورهای کامل پشت سر هم: {n} از {goal}",
+                scoreText: "امتیاز شما",
+                winTitle: "چالش را بردید",
+                messages: {
+                    perfect: "دور کامل! ولی حدس زدن هم از هر ۱۰ دور، یکی را کامل می‌کند؛ پس یک دور چیزی را ثابت نمی‌کند. برای بردن، {left} دور کامل دیگر پشت سر هم لازم است.",
+                    win: "{goal} دور کامل پشت سر هم! احتمال رسیدن به این نتیجه با حدس، ۱ در {odds} است. شما واقعاً تفاوت را می‌بینید.",
+                    nextLevel: "حالا سطح {n} را امتحان کنید.",
+                    one: "۱ از ۲. کلیک تصادفی هم از هر ۱۰ بار، ۶ بار همین نتیجه را می‌گیرد.",
+                    zero: "۰ از ۲. کلیک تصادفی هم از هر ۱۰ بار، ۳ بار همین نتیجه را می‌گیرد.",
+                    streakReset: "شمارش دورهای کامل از صفر شروع شد."
+                },
+                missedTitle: "این دو رنگ را از هم تشخیص ندادید",
+                missedNew: "رنگ جدید",
+                missedNearest: "نزدیک‌ترین رنگ بالا",
+                missedNote: "این‌ها دو رنگ متفاوت‌اند که کنار هم نمایش داده شده‌اند. اختلاف: ΔE {de} (کمترین اختلافی که بیشتر افراد متوجه می‌شوند حدود ۱ است)."
             }
         };
 
-        function changeLanguage() {
-            const language = document.getElementById('language').value;
-            const t = translations[language];
-            
-            // Update page title
-            document.getElementById('pageTitle').textContent = t.pageTitle;
-            document.title = t.pageTitle;
-            
-            // Update all UI elements
-            document.querySelector('.game-title').textContent = t.gameTitle;
-            document.querySelector('.game-subtitle').textContent = t.gameSubtitle;
-            document.querySelector('.control-label').textContent = t.languageLabel;
-            document.getElementById('originalColorsHeader').textContent = t.originalColorsHeader;
-            document.getElementById('testColorsHeader').textContent = t.testColorsHeader;
-            document.getElementById('calculateScoreButton').textContent = t.calculateScoreButton;
-            document.getElementById('resetButton').textContent = t.resetButton;
-            document.getElementById('difficultyLabel').textContent = t.difficultyLabel;
-            
-            // Update difficulty options
-            const difficultySelect = document.getElementById('difficulty');
-            const options = difficultySelect.options;
-            for (let i = 0; i < options.length; i++) {
-                options[i].text = t.difficultyLevels[i];
+        const $ = id => document.getElementById(id);
+        const colorPanel = $('colorPanel');
+        const testPanel = $('testPanel');
+        const checkButton = $('calculateScoreButton');
+        const nextButton = $('resetButton');
+        const scoreDiv = $('score');
+        const missedPairBox = $('missedPair');
+        const languageSelect = $('language');
+        const difficultySelect = $('difficulty');
+
+        const lang = () => languageSelect.value;
+        const t = () => translations[lang()];
+        const fmt = (n, digits = 0) => n.toLocaleString(lang() === 'fa' ? 'fa-IR' : 'en-US',
+            { minimumFractionDigits: digits, maximumFractionDigits: digits });
+        const fill = (text, vars) => text.replace(/\{(\w+)\}/g, (_, key) => vars[key]);
+        const cssColor = rgb => `rgb(${rgb.join(', ')})`;
+
+        // Positions on the line are kept here, never in the DOM, so inspecting a tile
+        // doesn't reveal which ones are new.
+        let round = null;   // { line, newPositions, topPositions, testPositions }
+        let topTiles = new Map();
+        let testTiles = new Map();
+        let selected = [];
+        let revealed = false;
+        let streak = 0;
+        let result = null;  // { hits, won, hadStreak, pair }
+
+        const tileColors = new WeakMap();
+        const painted = new WeakSet();
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
-            
-            // Update score if it exists
-            if (score !== undefined && scoreDiv.classList.contains('show')) {
-                updateScoreDisplay(score, language);
-            }
+            return array;
         }
 
-        let colors = [];
-        let testColors = [];
-        let selectedColors = [];
-        let score = 0;
-
-        function generateColors() {
-            colors = [];
-            const baseRed = Math.floor(Math.random() * 256);
-            const baseGreen = Math.floor(Math.random() * 256);
-            const baseBlue = Math.floor(Math.random() * 256);
-            const channel = Math.floor(Math.random() * 3); // Randomly choose a channel: 0 for red, 1 for green, 2 for blue
-            const difficulty = parseInt(document.getElementById('difficulty').value);
-            const increment = [20, 15, 10, 5, 1][difficulty - 1];
-            const maxStartValue = 255 - (increment * 11);
-            const startValue = Math.floor(Math.random() * maxStartValue);
-
-            for (let i = 0; i < 12; i++) {
-                let color;
-                if (channel === 0) {
-                    color = `rgb(${startValue + i * increment}, ${baseGreen}, ${baseBlue})`;
-                } else if (channel === 1) {
-                    color = `rgb(${baseRed}, ${startValue + i * increment}, ${baseBlue})`;
-                } else {
-                    color = `rgb(${baseRed}, ${baseGreen}, ${startValue + i * increment})`;
-                }
-                colors.push(color);
-            }
+        function newRound() {
+            const level = parseInt(difficultySelect.value);
+            const line = makeLine(LEVEL_DELTA_E[level - 1]);
+            // Any 5 spots on the line go to the test row and any 2 of those are new, so where
+            // a tile sits in the gradient says nothing about whether it's new.
+            const spots = shuffle([...line.keys()]);
+            round = {
+                line,
+                newPositions: spots.slice(0, 2),
+                topPositions: shuffle(spots.slice(2)),
+                testPositions: shuffle(spots.slice(0, TEST_SIZE))
+            };
+            selected = [];
+            revealed = false;
+            result = null;
+            renderTiles();
+            renderStatus();
+            renderResult();
         }
 
-        function displayColors(panel, colorArray, isTestPanel = false) {
-            panel.innerHTML = '';
-            colorArray.forEach((color, index) => {
-                const div = document.createElement('div');
-                div.className = 'color-box';
-                div.style.backgroundColor = color;
-                if (isTestPanel) {
-                    div.addEventListener('click', () => selectColor(div, color));
-                }
-                
-                // Add staggered animation
-                setTimeout(() => {
-                    div.style.opacity = '1';
-                    div.style.transform = 'translateY(0)';
-                }, index * 50);
-                
-                div.style.opacity = '0';
-                div.style.transform = 'translateY(20px)';
-                div.style.transition = 'all 0.5s ease';
-                
-                panel.appendChild(div);
+        function renderTiles() {
+            colorPanel.innerHTML = '';
+            testPanel.innerHTML = '';
+            topTiles = new Map();
+            testTiles = new Map();
+            round.topPositions.forEach((pos, i) => colorPanel.appendChild(makeTile(pos, i, false)));
+            round.testPositions.forEach((pos, i) => testPanel.appendChild(makeTile(pos, i, true)));
+            document.querySelectorAll('.color-panel canvas').forEach(paint);
+        }
+
+        function makeTile(pos, index, pickable) {
+            const tile = document.createElement(pickable ? 'button' : 'div');
+            tile.className = 'color-box';
+            tile.style.animationDelay = `${index * 40}ms`;
+            const canvas = document.createElement('canvas');
+            tileColors.set(canvas, round.line[pos]);
+            tile.appendChild(canvas);
+            if (pickable) {
+                tile.type = 'button';
+                tile.setAttribute('aria-pressed', 'false');
+                tile.setAttribute('aria-label', fill(t().tileLabel, { n: fmt(index + 1) }));
+                tile.addEventListener('click', () => toggle(pos));
+                testTiles.set(pos, tile);
+            } else {
+                topTiles.set(pos, tile);
+            }
+            return tile;
+        }
+
+        // Each pixel gets its own random offset, so the tile averages out to its color but
+        // no single pixel holds it, and an eyedropper reads noise. Every tile gets the same
+        // noise strength, so only the average color differs between tiles.
+        function paint(canvas) {
+            const dpr = window.devicePixelRatio || 1;
+            const width = Math.max(1, Math.round(canvas.clientWidth * dpr));
+            const height = Math.max(1, Math.round(canvas.clientHeight * dpr));
+            if (painted.has(canvas) && canvas.width === width && canvas.height === height) return;
+            canvas.width = width;
+            canvas.height = height;
+            const [r, g, b] = tileColors.get(canvas);
+            const ctx = canvas.getContext('2d');
+            const image = ctx.createImageData(width, height);
+            const px = image.data;
+            const span = 2 * NOISE + 1;
+            for (let i = 0; i < px.length; i += 4) {
+                px[i] = r + Math.floor(Math.random() * span) - NOISE;
+                px[i + 1] = g + Math.floor(Math.random() * span) - NOISE;
+                px[i + 2] = b + Math.floor(Math.random() * span) - NOISE;
+                px[i + 3] = 255;
+            }
+            ctx.putImageData(image, 0, 0);
+            painted.add(canvas);
+        }
+
+        function toggle(pos) {
+            if (revealed) return;
+            if (selected.includes(pos)) {
+                selected = selected.filter(p => p !== pos);
+            } else if (selected.length < 2) {
+                selected.push(pos);
+            }
+            renderStatus();
+        }
+
+        function renderStatus() {
+            const text = t();
+            testTiles.forEach((tile, pos) => {
+                const picked = selected.includes(pos);
+                tile.classList.toggle('selected', picked && !revealed);
+                tile.setAttribute('aria-pressed', String(picked));
+                tile.disabled = revealed;
             });
+            $('selectionCount').textContent = revealed ? '' : fill(text.selectedCount, { n: fmt(selected.length) });
+            $('streakText').textContent = fill(text.streakText, { n: fmt(streak), goal: fmt(STREAK_TO_WIN) });
+            const dots = $('streakDots');
+            dots.innerHTML = '';
+            for (let i = 0; i < STREAK_TO_WIN; i++) {
+                const dot = document.createElement('span');
+                dot.className = i < streak ? 'streak-dot filled' : 'streak-dot';
+                dots.appendChild(dot);
+            }
+            checkButton.textContent = text.checkButton;
+            checkButton.disabled = revealed || selected.length !== 2;
+            checkButton.classList.toggle('hidden', revealed);
+            nextButton.textContent = revealed ? text.nextButton : streak > 0 ? text.skipResetsButton : text.skipButton;
+            nextButton.classList.toggle('btn-primary', revealed);
+            nextButton.classList.toggle('btn-secondary', !revealed);
         }
 
-        function generateTestColors() {
-            const selectedColors = colors.slice(0, 10);
-            const newColors = colors.slice(10, 12);
-            const randomSelectedColors = selectedColors.sort(() => Math.random() - 0.5).slice(0, 3);
-            testColors = [...randomSelectedColors, ...newColors].sort(() => Math.random() - 0.5);
+        // The new color the player didn't pick, and the original it's closest to.
+        function findMissedPair() {
+            const missed = round.newPositions.find(pos => !selected.includes(pos));
+            if (missed === undefined) return null;
+            const color = round.line[missed];
+            let nearest = round.topPositions[0];
+            for (const pos of round.topPositions) {
+                if (deltaE(color, round.line[pos]) < deltaE(color, round.line[nearest])) nearest = pos;
+            }
+            return { missed, nearest, difference: deltaE(color, round.line[nearest]) };
         }
 
-        function selectColor(div, color) {
-            if (selectedColors.includes(color)) {
-                selectedColors = selectedColors.filter(c => c !== color);
-                div.classList.remove('selected');
-            } else if (selectedColors.length < 2) {
-                selectedColors.push(color);
-                div.classList.add('selected');
+        function checkAnswer() {
+            if (revealed || selected.length !== 2) return;
+            revealed = true;
+            const hits = selected.filter(pos => round.newPositions.includes(pos)).length;
+            const hadStreak = streak > 0;
+            streak = hits === 2 ? streak + 1 : 0;
+            result = { hits, hadStreak, won: streak >= STREAK_TO_WIN, pair: findMissedPair() };
+
+            markTiles();
+            renderStatus();
+            renderResult();
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            (result.pair ? missedPairBox : scoreDiv).scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+
+            const difficulty = difficultySelect.value;
+            dataLayer.push({
+                'event': 'score_calculated',
+                'score': hits,
+                'difficulty': difficulty,
+                'streak': streak
+            });
+            gtag('event', 'score_calculated', {
+               'score': hits,
+               'difficulty': difficulty,
+               'streak': streak
+             });
+        }
+
+        function markTiles() {
+            testTiles.forEach((tile, pos) => {
+                const isNew = round.newPositions.includes(pos);
+                if (selected.includes(pos)) {
+                    tile.classList.add(isNew ? 'correct' : 'wrong');
+                    tile.dataset.badge = isNew ? '✓' : '✗';
+                } else if (isNew) {
+                    tile.classList.add('missed');
+                    tile.dataset.badge = '!';
+                }
+            });
+            if (result.pair) {
+                const twin = topTiles.get(result.pair.nearest);
+                twin.classList.add('twin');
+                twin.dataset.badge = '≈';
             }
         }
 
         function createConfetti() {
             const confetti = document.createElement('div');
             confetti.className = 'confetti';
-            
+
             const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b', '#6c5ce7'];
-            
+
             for (let i = 0; i < 50; i++) {
                 const piece = document.createElement('div');
                 piece.className = 'confetti-piece';
@@ -808,96 +1197,113 @@
                 piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
                 confetti.appendChild(piece);
             }
-            
+
             return confetti;
         }
-        
-        function updateScoreDisplay(userScore, language = null) {
-            const lang = language || document.getElementById('language').value;
-            const t = translations[lang];
-            
-            // Remove existing classes and confetti
-            scoreDiv.className = 'score-display show';
+
+        function renderResult() {
+            scoreDiv.className = 'score-display';
             scoreDiv.innerHTML = '';
-            
+            missedPairBox.hidden = true;
+            if (!result) return;
+
+            const text = t();
+            const { hits, won } = result;
             let emoji, scoreClass, message;
-            
-            if (userScore === 2) {
+            if (won) {
                 emoji = '🏆';
                 scoreClass = 'score-perfect';
-                message = t.scoreMessages.perfect;
-                
-                // Add confetti for perfect score
-                const confetti = createConfetti();
-                scoreDiv.appendChild(confetti);
-            } else if (userScore === 1) {
-                emoji = '👍';
+                message = fill(text.messages.win, { goal: fmt(STREAK_TO_WIN), odds: fmt(10 ** STREAK_TO_WIN) });
+                const level = parseInt(difficultySelect.value);
+                if (level < LEVEL_DELTA_E.length) message += ' ' + fill(text.messages.nextLevel, { n: fmt(level + 1) });
+                scoreDiv.appendChild(createConfetti());
+            } else if (hits === 2) {
+                emoji = '🎯';
                 scoreClass = 'score-good';
-                message = t.scoreMessages.good;
+                message = fill(text.messages.perfect, { left: fmt(STREAK_TO_WIN - streak) });
             } else {
-                emoji = '💪';
+                emoji = '👀';
                 scoreClass = 'score-poor';
-                message = t.scoreMessages.poor;
+                message = hits === 1 ? text.messages.one : text.messages.zero;
+                if (result.hadStreak) message += ' ' + text.messages.streakReset;
             }
-            
-            scoreDiv.classList.add(scoreClass);
-            
+            scoreDiv.classList.add('show', scoreClass);
+
             const scoreContent = document.createElement('div');
             scoreContent.className = 'score-content';
             scoreContent.innerHTML = `
                 <span class="score-emoji">${emoji}</span>
-                <div class="score-text">${t.scoreText}</div>
-                <div class="score-value">${userScore}/2</div>
+                <div class="score-text">${won ? text.winTitle : text.scoreText}</div>
+                <div class="score-value">${fmt(hits)}/${fmt(2)}</div>
                 <div class="score-message">${message}</div>
             `;
-            
             scoreDiv.appendChild(scoreContent);
-        }
-        
-        function calculateScore() {
-            if (selectedColors.length !== 2) {
-                alert(translations[document.getElementById('language').value].selectColorsAlert);
-                return;
-            }
-            let userScore = 0;
-            selectedColors.forEach(color => {
-                if (colors.slice(10, 12).includes(color)) {
-                    userScore++;
-                }
-            });
-            score = userScore;
-            
-            updateScoreDisplay(userScore);
 
-            const difficulty = document.getElementById('difficulty').value;
-
-            dataLayer.push({
-                'event': 'score_calculated',
-                'score': score,
-                'difficulty': difficulty
-            });
-            gtag('event', 'score_calculated', {
-               'score': score,
-               'difficulty': difficulty
-             });
+            if (result.pair) renderMissedPair(result.pair);
         }
 
-        calculateScoreButton.addEventListener('click', calculateScore);
-
-        resetButton.addEventListener('click', resetGame);
-
-        function resetGame() {
-            scoreDiv.textContent = '';
-            scoreDiv.classList.remove('show');
-            generateColors();
-            displayColors(colorPanel, colors.slice(0, 10));
-            generateTestColors();
-            displayColors(testPanel, testColors, true);
-            selectedColors = [];
+        // Shown flat, edge to edge, after the round: the best possible chance to see the
+        // difference, and the values prove it's there.
+        function renderMissedPair({ missed, nearest, difference }) {
+            const text = t();
+            const newColor = cssColor(round.line[missed]);
+            const nearestColor = cssColor(round.line[nearest]);
+            $('missedTitle').textContent = text.missedTitle;
+            $('missedNewLabel').textContent = text.missedNew;
+            $('missedNearestLabel').textContent = text.missedNearest;
+            // One element with a hard stop: two side-by-side boxes can leave an anti-aliased
+            // seam on a half pixel, which looks like an edge that isn't in the colors.
+            const side = lang() === 'fa' ? 'left' : 'right';
+            $('missedSwatch').style.background = `linear-gradient(to ${side}, ${newColor} 50%, ${nearestColor} 50%)`;
+            $('missedNewValue').textContent = newColor;
+            $('missedNearestValue').textContent = nearestColor;
+            $('missedNote').textContent = fill(text.missedNote, { de: fmt(difference, 2) });
+            missedPairBox.hidden = false;
         }
 
-        // Initialize the game
-        resetGame();
+        function applyLanguage() {
+            const text = t();
+            document.documentElement.lang = lang();
+            document.documentElement.dir = lang() === 'fa' ? 'rtl' : 'ltr';
+            document.title = text.pageTitle;
+            document.querySelector('.game-title').textContent = text.gameTitle;
+            document.querySelector('.game-subtitle').textContent = text.gameSubtitle;
+            $('languageLabel').textContent = text.languageLabel;
+            $('difficultyLabel').textContent = text.difficultyLabel;
+            $('originalColorsHeader').textContent = text.originalColorsHeader;
+            $('testColorsHeader').textContent = text.testColorsHeader;
+            [...difficultySelect.options].forEach((option, i) => option.text = text.difficultyLevels[i]);
+            round.testPositions.forEach((pos, i) =>
+                testTiles.get(pos).setAttribute('aria-label', fill(text.tileLabel, { n: fmt(i + 1) })));
+            renderStatus();
+            renderResult();
+        }
+
+        checkButton.addEventListener('click', checkAnswer);
+
+        nextButton.addEventListener('click', () => {
+            // Skipping an unchecked round costs the streak, so nobody can wait for an easy
+            // one; after a win the next challenge starts from zero.
+            if (!revealed || streak >= STREAK_TO_WIN) streak = 0;
+            newRound();
+        });
+
+        difficultySelect.addEventListener('change', () => {
+            streak = 0;
+            newRound();
+        });
+
+        languageSelect.addEventListener('change', applyLanguage);
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => document.querySelectorAll('.color-panel canvas').forEach(paint), 150);
+        });
+
+        newRound();
+        applyLanguage();
+    })();
     </script>
 </body>
 </html>
